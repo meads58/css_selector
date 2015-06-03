@@ -16,10 +16,13 @@ var $ = function (selector) {
   }
 
   var findIdIndex = function() {
+    var splitUp = selector.split(/(?=[#\.])/g)
     var idIndexPos = selector.search('#')
     if (idIndexPos > -1 ){
       classIdIndexPos.push(idIndexPos)
     }
+    console.log(splitUp
+      )
   };
 
   var findClassIndexes = function (){
@@ -51,13 +54,12 @@ var $ = function (selector) {
   };
 
   var sliceAtEachPosition = function() {
+    var classToAdd = ''
     for (var i=0; i<classIdIndexPos.length;i++){
-      //if(classIdIndexPos[i + 1] < selector.length){
-        selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]));
-      //}else{
-        //selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
-      //}
+        classToAdd = selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]);
+        selectorArray.push(classToAdd)
     }
+    console.log(String(classToAdd))
   };
 
   var verifySelectorMatch = function() {
@@ -110,12 +112,16 @@ var $ = function (selector) {
 
     }else if(foundById === false && classNames.length > 0){
       console.log('toodles')
+      var arrr = 'some_class'
 
-      var elementByClass = document.getElementsByClassName(classNames[0])
-      console.log(elementByClass[0])
-      for(var i=0; i < elementByClass.length; i++){
+      bb = 'some_class'
+      var elementByClass = []
+      elementByClass.push(document.getElementsByClassName(arrr))
+      console.log('bbbb ' + elementByClass[0])
+      console.log('some_class')
+      //for(var i=0; i < elementByClass.length; i++){
 
-      }
+      //}
 
       //if(tagName.toUpperCase() === elementByClass[i].tagName.toUpperCase() || tagName === ''){
 
@@ -136,10 +142,13 @@ var $ = function (selector) {
 // findIdIndex()
 // findClassIndexes()
 sliceUpSelector()
-console.log(selectorArray)
+console.log('sss: ' + selectorArray)
 // console.log('elements: ' + elements)
 
 console.log('cc: ' + elements)
+var ff = []
+var a = 'me'
+ff.push(selectorArray[0])
 var ss = new String(classNames[0])
 var hh = ['.some_class', '.another_class']
 hh = hh.toString().replace(/\,/g,'').slice(1).split('.')
@@ -148,7 +157,7 @@ ee = ee.join('').slice(1).split('.')
 var bb = 'some_class'
 var dd = ''
 dd = (document.getElementsByClassName(ee[0]))
-// console.log(ee)
+ console.log('ff: ' + dd[0].nodeName)
 // console.log(ss.slice(1))
 // console.log(dd[0].tagName)
 console.log('---------------------------')
