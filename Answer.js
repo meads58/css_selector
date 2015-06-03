@@ -1,17 +1,12 @@
 "use strict";
 var $ = function (selector) {
-  var selector = "div.me.to#cool"
+  //var selector = "div.me.to#cool"
   var elements = [];
-  var tag = '';
+  var tagName = '';
   var idName = '';
   var className = [];
   var selectorArray = []
   var classIdIndexPos = [];
-
-  var position = {
-    idIndex: selector.search('#'),
-    classIndex: selector.search(/\./)
-   };
 
   var compareNumbers = function(a, b) {
     return a - b;
@@ -22,7 +17,7 @@ var $ = function (selector) {
     if (idIndexPos > -1 ){
       classIdIndexPos.push(idIndexPos)
     }
-  }
+  };
 
   var findClassIndexes = function (){
     for(var i=0; i<selector.length;i++) {
@@ -36,30 +31,65 @@ var $ = function (selector) {
     findIdIndex();
     findClassIndexes();
     if (classIdIndexPos.length > 0){
-      sliceUp()
-    }else{
-      tag = selector;
+      checkStartPostition()
     };
+    splitOutId()
+    verifySelectorMatch();
   };
 
-  var sliceUp = function() {
+  var checkStartPostition = function() {
     classIdIndexPos = classIdIndexPos.sort(compareNumbers);
       if(classIdIndexPos[0] === 0){
        sliceAtEachPosition();
       }else{
-        selectorArray.push(selector.slice(0, classIdIndexPos[0]));
+        tagName = (selector.slice(0, classIdIndexPos[0]));
         sliceAtEachPosition();
       }
   };
 
   var sliceAtEachPosition = function() {
     for (var i=0; i<classIdIndexPos.length;i++){
-            if(classIdIndexPos[i + 1] < selector.length){
-              selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]))
-            }else{
-              selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
-            }
-          }
+      if(classIdIndexPos[i + 1] < selector.length){
+        selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]));
+      }else{
+        selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
+      }
+    }
+  };
+
+  var verifySelectorMatch = function() {
+    if (selectorArray.length === 0){
+      elements = document.getElementsByTagName(selector)
+    }else{
+      checkWithId();
+      checkWithClass();
+    };
+  };
+
+  var splitIdAndClasses = function() {
+    for (var i=0; i < selectorArray.length; i++){
+      if (selectorArray[i].charAt(0) === '#')
+      {
+        idName = selectorArray[idPos].splice(i, 1)
+        idName = idName.slice(1)
+      }
+    }
+    className = selectorArray
+  }
+
+  var checkWithId = function() {
+    if (idName != ''){
+      var idName = selectorArray[idPos].slice(1)
+      var idElement = document.getElementById(idName)
+      if (tagName != '' || tagName === idElement.tagName){
+        elements.push(idElement)
+      }
+    }
+    console.log(idPos)
+  };
+
+  var checkWithClass = function() {
+
   };
 
   // var findTag = function(){
@@ -132,14 +162,14 @@ var $ = function (selector) {
 // findClassIndexes()
 sliceUpSelector()
 console.log(selectorArray)
-
+console.log('elements: ' + elements)
 
 //console.log(elements[0].classList)
 //console.log(elements[0].classList)
 //console.log(elements[0].tagName)
 console.log('id name: ' + idName)
 console.log('class name: ' + className)
-console.log('tag name: ' + tag)
+console.log('tag name: ' + tagName)
 
   ///////////////////
   // Your code here //
