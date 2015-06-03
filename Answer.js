@@ -8,6 +8,7 @@ var $ = function (selector) {
   var foundById = false;
   var noClassMatch = false;
   var selectorArray = []
+  var idElement = ''
   var classIdIndexPos = [];
 
   var compareNumbers = function(a, b) {
@@ -37,7 +38,6 @@ var $ = function (selector) {
     };
     splitIdAndClasses()
     verifySelectorMatch();
-    console.log('idName: ' + idName)
   };
 
   var checkStartPostition = function() {
@@ -46,28 +46,26 @@ var $ = function (selector) {
        sliceAtEachPosition();
       }else{
         tagName = (selector.slice(0, classIdIndexPos[0]));
-        console.log(tagName)
         sliceAtEachPosition();
       }
   };
 
   var sliceAtEachPosition = function() {
     for (var i=0; i<classIdIndexPos.length;i++){
-      if(classIdIndexPos[i + 1] < selector.length){
+      //if(classIdIndexPos[i + 1] < selector.length){
         selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]));
-      }else{
-        selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
-      }
+      //}else{
+        //selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
+      //}
     }
   };
 
   var verifySelectorMatch = function() {
-    console.log('arrLen: '+selectorArray.length )
     if (classNames.length === 0 && idName === ''){
       elements = (document.getElementsByTagName(selector))
     }else{
       checkWithId();
-      //checkWithClass();
+      checkWithClass();
     };
   };
 
@@ -75,20 +73,17 @@ var $ = function (selector) {
     for (var i=0; i < selectorArray.length; i++){
       if (selectorArray[i].charAt(0) === '#')
       {
-        idName = String(selectorArray.splice(i, 1))
-        idName = idName.slice(1)
+        idName = selectorArray.splice(i, 1)
+        idName = String(idName).slice(1)
       }
     }
-    classNames = selectorArray
+    classNames = selectorArray.join('').slice(1).split('.')
   }
-
-  //|| tagName != ''
 
   var checkWithId = function() {
     if (idName != ''){
-      var idElement = (document.getElementById(idName))
+      idElement = (document.getElementById(idName))
       if (tagName.toUpperCase() === idElement.tagName.toUpperCase() || tagName === ''){
-
         elements.push(idElement)
         foundById = true;
       }
@@ -96,80 +91,41 @@ var $ = function (selector) {
   };
 
   var checkWithClass = function() {
-    if(foundById === true && classNames.length < 0){
-       for(var i=0; i < classNames.length;i++){
-        var currentClass = classNames[i].slice(1)
-        for(var n=0; n < elements[0].classList.length; n++){
-          if(currentClass != elements[0].classList[n]){
-            noClassMatch = true;
+    var matches = 0
+    if(foundById === true && classNames.length > 0){
+      if(tagName.toUpperCase() === idElement.tagName.toUpperCase() || tagName === ''){
+        for(var i=0; i < classNames.length;i++){
+          var currentClass = classNames[i]
+          for(var n=0; n < elements[0].classList.length; n++){
+
+            if(currentClass === elements[0].classList[n]){
+              matches++
+            }
           }
         }
+      }else{
+
+        elements = []
       }
-    }else if(foundById === false && classNames.length < 0){
-      elements = document.getElementsByClassName('some_class')
+
+    }else if(foundById === false && classNames.length > 0){
+      console.log('toodles')
+
+      var elementByClass = document.getElementsByClassName(classNames[0])
+      console.log(elementByClass[0])
+      for(var i=0; i < elementByClass.length; i++){
+
+      }
+
+      //if(tagName.toUpperCase() === elementByClass[i].tagName.toUpperCase() || tagName === ''){
+
+      //}
+      matches = classNames.length
     }
-    console.log(elements[0])
+    if(matches != classNames.length ){
+      elements = []
+    }
   };
-
-  // var findTag = function(){
-  //  }
-
-
-  // var findId = function(){
-  //   if (position.classIndex > position.idIndex){
-  //     selectorLength = position.classIndex
-  //   }else{
-  //     selectorLength = selector.length
-  //   }
-  //   idName = selector.slice(position.idIndex + 1, selectorLength )
-  // };
-
-  // var findClass = function(){
-  //   if (position.classIndex > -1){
-
-  //     if (position.idIndex > position.classIndex){
-  //       selectorLength = position.idIndex
-  //     }else{
-  //       selectorLength = selector.length
-  //     }
-
-  //     className = selector.slice(position.classIndex + 1, selectorLength )
-  //   }else{
-  //     return ''
-  //   }
-  // };
-
-  // var findById = function() {
-  //   findId();
-  //   var idElement = document.getElementById(idName);
-
-  //   checkTagName(idElement);
-  //   if (checkTagName(idElement) == true ){
-  //     elements.push(idElement)
-  //   }
-  // }
-
-  // var checkTagName = function (element) {
-  //   findTag();
-
-  //   // if (element.tagName.toLowerCase() === tag){
-  //   //   return true;
-  //   // }else{
-  //   //   return false;
-  //   // };
-  // };
-
-  // var checkClassName = function (element){
-  //   findClass();
-  // };
-
-//console.log(document.getElementById(idName))
-// findById();
-//  findId();
-//  findClass();
-//  findTag();
-
-
 
 // var elements2 = (document.getElementsByClassName(className));
 
@@ -184,6 +140,17 @@ console.log(selectorArray)
 // console.log('elements: ' + elements)
 
 console.log('cc: ' + elements)
+var ss = new String(classNames[0])
+var hh = ['.some_class', '.another_class']
+hh = hh.toString().replace(/\,/g,'').slice(1).split('.')
+var ee = ['.some_class', '.another_class']
+ee = ee.join('').slice(1).split('.')
+var bb = 'some_class'
+var dd = ''
+dd = (document.getElementsByClassName(ee[0]))
+// console.log(ee)
+// console.log(ss.slice(1))
+// console.log(dd[0].tagName)
 console.log('---------------------------')
 //console.log(elements[0].classList)
 //console.log(elements[0].tagName)
