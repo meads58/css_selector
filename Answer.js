@@ -6,7 +6,6 @@ var $ = function (selector) {
   var idName = '';
   var className = [];
   var selectorArray = []
-  var selectorLength = 0;
   var classIdIndexPos = [];
 
   var position = {
@@ -46,24 +45,21 @@ var $ = function (selector) {
   var sliceUp = function() {
     classIdIndexPos = classIdIndexPos.sort(compareNumbers);
       if(classIdIndexPos[0] === 0){
-        for (var i=0; i<classIdIndexPos.length;i++){
-            if(classIdIndexPos[i + 1] < selector.length){
-              selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]))
-            }else{
-              selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
-            }
-          }
+       sliceAtEachPosition();
       }else{
-        selectorArray.push(selector.slice(0, classIdIndexPos[0]))
-          for (var i=0; i<classIdIndexPos.length;i++){
+        selectorArray.push(selector.slice(0, classIdIndexPos[0]));
+        sliceAtEachPosition();
+      }
+  };
+
+  var sliceAtEachPosition = function() {
+    for (var i=0; i<classIdIndexPos.length;i++){
             if(classIdIndexPos[i + 1] < selector.length){
               selectorArray.push(selector.slice(classIdIndexPos[i], classIdIndexPos[i+1]))
             }else{
               selectorArray.push(selector.slice(classIdIndexPos[i], selector.length))
             }
           }
-      }
-
   };
 
   // var findTag = function(){
