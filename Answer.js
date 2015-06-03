@@ -4,7 +4,9 @@ var $ = function (selector) {
   var elements = [];
   var tagName = '';
   var idName = '';
-  var className = [];
+  var classNames = [];
+  var foundById = false;
+  var noClassMatch = false;
   var selectorArray = []
   var classIdIndexPos = [];
 
@@ -33,8 +35,9 @@ var $ = function (selector) {
     if (classIdIndexPos.length > 0){
       checkStartPostition()
     };
-    splitOutId()
+    splitIdAndClasses()
     verifySelectorMatch();
+    console.log('idName: ' + idName)
   };
 
   var checkStartPostition = function() {
@@ -43,6 +46,7 @@ var $ = function (selector) {
        sliceAtEachPosition();
       }else{
         tagName = (selector.slice(0, classIdIndexPos[0]));
+        console.log(tagName)
         sliceAtEachPosition();
       }
   };
@@ -58,11 +62,12 @@ var $ = function (selector) {
   };
 
   var verifySelectorMatch = function() {
-    if (selectorArray.length === 0){
-      elements = document.getElementsByTagName(selector)
+    console.log('arrLen: '+selectorArray.length )
+    if (classNames.length === 0 && idName === ''){
+      elements = (document.getElementsByTagName(selector))
     }else{
       checkWithId();
-      checkWithClass();
+      //checkWithClass();
     };
   };
 
@@ -70,26 +75,40 @@ var $ = function (selector) {
     for (var i=0; i < selectorArray.length; i++){
       if (selectorArray[i].charAt(0) === '#')
       {
-        idName = selectorArray[idPos].splice(i, 1)
+        idName = String(selectorArray.splice(i, 1))
         idName = idName.slice(1)
       }
     }
-    className = selectorArray
+    classNames = selectorArray
   }
+
+  //|| tagName != ''
 
   var checkWithId = function() {
     if (idName != ''){
-      var idName = selectorArray[idPos].slice(1)
-      var idElement = document.getElementById(idName)
-      if (tagName != '' || tagName === idElement.tagName){
+      var idElement = (document.getElementById(idName))
+      if (tagName.toUpperCase() === idElement.tagName.toUpperCase() || tagName === ''){
+
         elements.push(idElement)
+        foundById = true;
       }
     }
-    console.log(idPos)
   };
 
   var checkWithClass = function() {
-
+    if(foundById === true && classNames.length < 0){
+       for(var i=0; i < classNames.length;i++){
+        var currentClass = classNames[i].slice(1)
+        for(var n=0; n < elements[0].classList.length; n++){
+          if(currentClass != elements[0].classList[n]){
+            noClassMatch = true;
+          }
+        }
+      }
+    }else if(foundById === false && classNames.length < 0){
+      elements = document.getElementsByClassName('some_class')
+    }
+    console.log(elements[0])
   };
 
   // var findTag = function(){
@@ -162,14 +181,15 @@ var $ = function (selector) {
 // findClassIndexes()
 sliceUpSelector()
 console.log(selectorArray)
-console.log('elements: ' + elements)
+// console.log('elements: ' + elements)
 
-//console.log(elements[0].classList)
+console.log('cc: ' + elements)
+console.log('---------------------------')
 //console.log(elements[0].classList)
 //console.log(elements[0].tagName)
-console.log('id name: ' + idName)
-console.log('class name: ' + className)
-console.log('tag name: ' + tagName)
+// console.log('id name: ' + idName)
+// console.log('class name: ' + classNames)
+// console.log('tag name: ' + tagName)
 
   ///////////////////
   // Your code here //
