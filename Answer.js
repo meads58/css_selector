@@ -8,11 +8,15 @@ var $ = function (selector) {
   var foundById = false;
   var noClassMatch = false;
   var selectorArray = []
-  var idElement = ''
+
   var classIdIndexPos = [];
-  var splitUp = selector.split(/(?=[#\.])/g)
-  var arrOfClasses = []
-  var tagDiv = ''
+  var splitUp = selector.split(/(?=[#\.])/g);
+  var arrOfClasses = [];
+  var tagDiv = '';
+  var idValue = '';
+  var idElement = ''
+  var match = false
+
 
 
   var compareNumbers = function(a, b) {
@@ -21,9 +25,19 @@ var $ = function (selector) {
 
   var getTag = function() {
     if(['#', '.'].indexOf(splitUp[0].charAt(0)) === -1){
-      tagDiv = splitUp[0]
+      tagName = splitUp[0]
+      return true;
     }
-  }
+  };
+
+  var getId = function() {
+    for(var i=0; i < splitUp.length; i++){
+      if(['#'].indexOf(splitUp[i].charAt(0)) === 0){
+        idValue = splitUp[i]
+        return true
+      }
+    }
+  };
 
   var getAllClasses = function() {
     for(var i=0; i < splitUp.length; i++){
@@ -33,13 +47,115 @@ var $ = function (selector) {
     }
   };
 
-  var searchTag = function() {
-    if(tagDiv != ''){
-      elements = document.getElementsByTagName(tagDiv)
+  var searchByTag = function() {
+      return document.getElementsByTagName(tagName)
+  };
+
+  var setByTag = function() {
+     elements = document.getElementsByTagName(tagName);
+  }
+
+  var searchById = function() {
+      return document.getElementById(idValue.slice(1))
+  };
+
+  var setById = function() {
+    elements.push(document.getElementById(idValue.slice(1)));
+  }
+
+  var searchByClass = function(classPos) {
+    return document.getElementsByClassName(arrOfClasses[classPos].slice(1))
+  }
+
+  var setByClass = function(classPos) {
+    elements = document.getElementsByClassName(arrOfClasses[classPos].slice(1));
+  }
+
+  var matchingRule = function() {
+    if (splitUp.length === 1){
+      matchOneTag()
+    }else{
+      multipleTags()
+      console.log('err1')
     }
   }
 
-  var checkWithClasses()
+  var matchOneTag= function() {
+    if(getTag() === true){
+      setByTag();
+    }else if(getId() === true){
+      setById();
+    }else {
+      getAllClasses()
+      setByClass(0);
+    }
+  };
+
+  var multipleTags = function() {
+    getTag();
+    getAllClasses();
+    if(splitUp.length === 2){
+      matchTwoTags()
+    }else{
+      console.log(splitUp.length)
+      matchThreeTags()
+    }
+  };
+
+  var matchTwoTags = function() {
+    if(getId() === true){
+      confirmIdMatch();
+    }else{
+      confirmClassMatch('tag');
+    }
+  };
+
+  var matchThreeTags = function(){
+    getId();
+   if(confirmIdMatch() && confirmClassMatch('id') === true){
+    console.log('cool')
+   }
+  }
+
+  var confirmIdMatch = function() {
+    var idTagName = searchById().tagName.toUpperCase()
+    if (tagName.toUpperCase() === idTagName){
+      return true
+    }else if (arrOfClasses.length > 0 ){
+      confirmClassMatch('id');
+    }
+  }
+
+  var confirmClassMatch = function(compareWith) {
+    var arrValue = arrOfClasses[0].slice(1)
+    switch (compareWith) {
+      case 'id':
+        if(classListToArray(searchById).indexOf(arrValue) > -1){
+          setById();
+        };
+        break;
+      case 'tag':
+        if(classListToArray(searchByTag).indexOf(arrValue) > -1){
+         setByTag();
+        };
+        break;
+    }
+  }
+
+  var classListToArray = function(searchFunction) {
+    var classArray = [], list = [];
+    if(searchFunction === searchById){
+      list = searchFunction().classList
+    }else{
+      list = searchFunction()[0].classList
+    }
+    for(var i=0; i < list.length; i++){
+      classArray.push(list[i]);
+    }
+    return classArray;
+  };
+
+ matchingRule()
 
   var searchClass = function(className) {
     if(elements.length === 0 && arrOfClasses.length > 0  ){
@@ -63,7 +179,7 @@ var $ = function (selector) {
     };
   };
 
-  searchElement()
+
 
 
 
