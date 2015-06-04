@@ -13,3 +13,7 @@ Given a CSS string of elements this search function will return the matching DOM
     - Two elements would use the id to select if present and then compare these attributes to the other element. If no id then tagName was used and compared against the classList to the classes in arrOfClasses.
     - Three elements used id to get the DOM element then compared the DOM's attributes to the tagName and arrOfClasses.
 * A DOM element could have more than one class but there was no test specifically for this. Seeing it was a possibility the classes were put into the array 'arrayOfClasses'. When needed new functionality could now be added for a selector with more than one class.
+
+###Improvements
+* Refactoring of the matching rules for 2 and 3 elements into one function could be done based on the size of the split up seletor array.
+* Getting the classList from the DOM element feels quite clunky and should be improved.

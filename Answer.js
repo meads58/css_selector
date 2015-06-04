@@ -37,15 +37,15 @@ var $ = function (selector) {
   };
 
   var searchByTag = function() {
-      return document.getElementsByTagName(tagName)
+    return document.getElementsByTagName(tagName)
   };
 
   var setByTag = function() {
-     elements = document.getElementsByTagName(tagName);
+    elements = document.getElementsByTagName(tagName);
   }
 
   var searchById = function() {
-      return document.getElementById(idName.slice(1))
+    return document.getElementById(idName.slice(1))
   };
 
   var setById = function() {
@@ -90,15 +90,16 @@ var $ = function (selector) {
   var twoElements = function() {
     if(getId() && confirmIdMatch()){
       setById();
-    }else if (arrOfClasses.length > 0){
-      confirmClassMatch('tag');
+    }else if (arrOfClasses.length > 0 && confirmClassMatch('tag')){
+      setByTag();
     }
   };
 
   var threeElements = function(){
     getId();
-   if(confirmIdMatch() && confirmClassMatch('id')){
-   }
+    if(confirmIdMatch() && confirmClassMatch('id')){
+      setById()
+    }
   };
 
   var confirmIdMatch = function() {
@@ -114,13 +115,13 @@ var $ = function (selector) {
     var arrValue = arrOfClasses[0].slice(1)
     switch (compareWith) {
       case 'id':
-        if (elementMatch(searchById, arrValue) === true){
-          setById();
+        if (elementMatch(searchById, arrValue)){
+          return true
         };
         break;
       case 'tag':
-        if (elementMatch(searchByTag, arrValue) === true){
-           setByTag();
+        if (elementMatch(searchByTag, arrValue)){
+           return true
         };
         break;
     }
