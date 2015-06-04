@@ -5,7 +5,7 @@ var $ = function (selector) {
   var splitUp = selector.split(/(?=[#\.])/g);
   var arrOfClasses = [];
   var tagName = '';
-  var idValue = '';
+  var idName = '';
 
   var init = function() {
     getTag();
@@ -22,7 +22,7 @@ var $ = function (selector) {
   var getId = function() {
     for(var i=0; i < splitUp.length; i++){
       if(['#'].indexOf(splitUp[i].charAt(0)) === 0){
-        idValue = splitUp[i]
+        idName = splitUp[i];
         return true;
       }
     }
@@ -31,7 +31,7 @@ var $ = function (selector) {
   var getAllClasses = function() {
     for(var i=0; i < splitUp.length; i++){
       if(splitUp[i].charAt(0) === '.'){
-        arrOfClasses.push(splitUp[i])
+        arrOfClasses.push(splitUp[i]);
       }
     }
   };
@@ -45,11 +45,11 @@ var $ = function (selector) {
   }
 
   var searchById = function() {
-      return document.getElementById(idValue.slice(1))
+      return document.getElementById(idName.slice(1))
   };
 
   var setById = function() {
-    elements.push(document.getElementById(idValue.slice(1)));
+    elements.push(document.getElementById(idName.slice(1)));
   }
 
   var searchByClass = function(classPos) {
